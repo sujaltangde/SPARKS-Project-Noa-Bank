@@ -1,13 +1,14 @@
 import React from 'react'
 import { useEffect, useState } from "react"
 import { db } from "../config/firebase"
-import { getDocs, collection  } from 'firebase/firestore'
+import { getDocs, collection, addDoc  } from 'firebase/firestore'
 
 export const Customers = () => {
 
   const [custList, setcustList] = useState([])
 
   const customerRef = collection(db, "customers")
+
 
 
   //    READ or get or retrive the movie document

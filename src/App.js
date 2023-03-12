@@ -11,6 +11,7 @@ import {
   Link
 } from "react-router-dom";
 import { Transfer } from "./components/Transfer";
+import { Transactions } from "./components/Transactions";
 
 function App() {
   return (
@@ -23,8 +24,9 @@ function App() {
 
           <Route path="/" element={<Home />} />
           <Route path="/customers" element={ <Customers />} />
-          <Route path="/about" element={ <About />} />
           <Route path="/transfer" element={ <Transfer/> } />
+          <Route path="/transactions" element={ <Transactions/> } />
+          <Route path="/about" element={ <About />} />
 
         </Routes>
 

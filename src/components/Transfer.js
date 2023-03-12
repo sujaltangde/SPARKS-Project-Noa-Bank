@@ -1,15 +1,42 @@
 import React from 'react'
 import { db } from "../config/firebase"
-import { updateDoc,collection, query, where, getDocs } from "firebase/firestore";
+import { updateDoc,collection, query, where,addDoc, getDocs } from "firebase/firestore";
 import { useState } from 'react'
 
 export const Transfer = () => {
+  const [showMessage, setShowMessage] = useState(false);
+
+  function displayMessage() {
+    setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
+  }
 
   const [trsNam, setTrsNam] = useState("")
 
   const [rcvNam, setRcvNam] = useState("")
 
   const [amount, setAmount] = useState(0)
+
+
+  const transRef = collection(db, "transactions")
+
+
+  //    CREATE the new movie document
+  const onSubmitTran = async (nam1,nam2,amount) => {
+    try {
+        await addDoc(transRef, {              
+            transferor: nam1,
+            receiver: nam2,
+            amount: amount,
+        })
+    }
+    catch (err) {
+        console.error(err)
+    }
+}
+
 
 
   //     UPDATE the amount in customers document
@@ -48,17 +75,35 @@ export const Transfer = () => {
     <>
 
       <main className="min-h-screen" >
+      {showMessage && (
+        <div
+          className="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3"
+          role="alert"
+        >
+          <p className="font-bold">Congratulations !</p>
+          <p className="text-sm">Money Transfer Done successfully</p>
+        </div>
+      )}
+
         <div className="  justify-center py-6 flex" >
           <div className="flex flex-col gap-7 items-center border-2 border-gray-300 ring-2 ring-gray-200 rounded-lg px-16 py-3 " >
           <h1 className="text-3xl font-bold" >Transfer Money</h1>
-            <label htmlFor="" className="text-xl font-semibold" >Enter Name of Transferor  :      <input className="px-2 py-1 border border-black" type="text"
-              onChange={(e) => { setTrsNam(e.target.value) }} />     </label>
+            <label htmlFor="" className="text-xl font-semibold" >Enter Name of Transferor  :      
+            <input className="px-2 py-1 border border-black" type="text"
+              onChange={(e) => { setTrsNam(e.target.value) }} />    
+              
+               </label>
             <label htmlFor="" className="text-xl font-semibold" >Enter Name of Recipient  :      <input className="px-2 py-1 border border-black" type="text"
               onChange={(e) => { setRcvNam(e.target.value) }} />     </label>
             <label htmlFor="" className="text-xl font-semibold" >Enter Amount : <input type="number" className="px-2 py-1 border border-black"
               onChange={(e) => { setAmount( parseInt( e.target.value)) }} /> </label>
             <button className="bg-blue-500 px-2 py-2 text-white rounded-lg font-semibold text-lg" 
-            onClick={transferAmount(trsNam,rcvNam,amount)} >Transfer Amount</button>
+           onClick={() => {
+            transferAmount(trsNam, rcvNam, amount);
+            onSubmitTran(trsNam, rcvNam, amount);
+            displayMessage();
+        }}
+               >Transfer Amount</button>
     
           </div>
 
